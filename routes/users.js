@@ -24,8 +24,8 @@ router.post("/signup", (req, res) => {
 				token: token,
 			})
 
-			newUser.save().then(() => {
-				res.json({ result: true, token: token })
+			newUser.save().then((data) => {
+				res.json({ result: true, user: data })
 			})
 		} else {
 			res.json({ result: false, error: "User already exists" })
@@ -43,13 +43,26 @@ router.post("/signin", (req, res) => {
 	}
 
 	User.findOne({ username: req.body.username }).then((data) => {
-		console.log(data)
 		if (data && bcrypt.compareSync(req.body.password, data.password)) {
-			res.json({ result: true, token: data.token })
+			res.json({ result: true, token: data })
 		} else {
 			res.json({ result: false, error: "User not found" })
 		}
 	})
 })
+
+// UPDATE /USER/HELPERZ/:ID
+// router.update("/helperz/:token", (req, res) => {
+// 	User.updateOne(
+// 		{
+// 			token: req.params.token,
+// 		},
+// 		{
+// 			$set: {
+// 				...(req.body.username && { username: req.body.username }),
+// 			},
+// 		}
+// 	)
+// })
 
 module.exports = router

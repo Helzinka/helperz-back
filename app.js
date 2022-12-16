@@ -10,6 +10,7 @@ const cors = require("cors")
 
 // noms routers
 const indexRouter = require("./routes/index")
+const announcesRouter = require("./routes/announces")
 const usersRouter = require("./routes/users")
 
 // initialisation de express
@@ -25,6 +26,7 @@ app.use(express.static(path.join(__dirname, "public")))
 
 // chemins des routers principaux
 app.use("/", indexRouter)
+app.use("/announces", announcesRouter)
 app.use("/users", usersRouter)
 
 module.exports = app

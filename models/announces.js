@@ -1,6 +1,4 @@
 const mongoose = require("mongoose")
-const Users = require("./users")
-const Comments = require("./comments")
 
 const userSchema = mongoose.Schema({
 	title: String,
@@ -8,10 +6,10 @@ const userSchema = mongoose.Schema({
 	price: Number,
 	description: String,
 	tag: [String],
-	userOwner: { type: mongoose.Schema.Types.ObjectId, ref: Users },
-	comments: [{ type: mongoose.Schema.Types.ObjectId, ref: Comments }],
+	userOwner: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+	comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "comments" }],
 })
 
-const User = mongoose.model("announces", userSchema)
+const announces = mongoose.model("announces", userSchema)
 
-module.exports = User
+module.exports = announces
