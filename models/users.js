@@ -1,23 +1,32 @@
 const mongoose = require("mongoose")
-const Announces = require("./announces")
 
-const latLong = mongoose.Schema({
+// sous-document position
+const Position = mongoose.Schema({
+	name: String,
 	lat: Number,
 	long: Number,
 })
 
+// sous-document helperz
+const Helper = mongoose.Schema({
+	isHelper: Boolean,
+	available: Boolean,
+	skills: [String],
+	review: Number,
+	location: Position,
+})
+
+// Model user
+// clef-etrangere vers collection "announces"
+// user a plusieurs annonces
 const userSchema = mongoose.Schema({
 	username: String,
 	lastname: String,
 	password: String,
 	email: String,
-	isHelper: Boolean,
-	available: Boolean,
-	review: Number,
-	location: latLong,
-	skills: [String],
+	helper: Helper,
 	token: String,
-	annonces: [{ type: mongoose.Schema.Types.ObjectId, ref: Announces }],
+	announces: [{ type: mongoose.Schema.Types.ObjectId, ref: "announces" }],
 })
 
 const User = mongoose.model("users", userSchema)

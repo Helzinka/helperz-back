@@ -9,10 +9,25 @@ router.post("/", function (req, res) {
 		url: req.body.url,
 		price: req.body.price,
 		description: req.body.description,
-		tag: [req.body.tag],
+		userOwner: req.body.userOwner,
+		tag: req.body.tag,
 	}).then((data) => {
-		res.json("Create announces", `${data.title}`)
+		res.json(data)
 	})
 })
+
+// suprimmer des champs
+// router.post("/:id", (req, res) => {
+// 	Announces.updateOne(
+// 		{
+// 			_id: req.params.id,
+// 		},
+// 		{
+// 			$unset: { title: "", url: "" },
+// 		}
+// 	).then((data) => {
+// 		res.json(data)
+// 	})
+// })
 
 module.exports = router

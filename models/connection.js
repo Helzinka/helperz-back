@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 
+// .env DB_STRING
 const connectionString = process.env.DB_STRING
 
 mongoose

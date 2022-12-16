@@ -1,15 +1,23 @@
 const mongoose = require("mongoose")
 
-const userSchema = mongoose.Schema({
+// sous-document position
+const Position = mongoose.Schema({
+	name: String,
+	lat: Number,
+	long: Number,
+})
+
+const announcesSchema = mongoose.Schema({
 	title: String,
 	url: String,
 	price: Number,
 	description: String,
+	location: Position,
 	tag: [String],
 	userOwner: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
 	comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "comments" }],
 })
 
-const announces = mongoose.model("announces", userSchema)
+const announces = mongoose.model("announces", announcesSchema)
 
 module.exports = announces

@@ -7,25 +7,37 @@ const bcrypt = require("bcrypt")
 
 // POST /USER/SIGNUP
 // inscription d'un utilisateur
-// champs : username + password
 router.post("/signup", (req, res) => {
-	if (!checkBody(req.body, ["username", "password"])) {
+	// champ requis "username", "password" , "email" + "lastname"
+	if (!checkBody(req.body, ["username", "email", "password", "lastname"])) {
 		res.json({ result: false, error: "Missing or empty fields" })
 		return
 	}
 
-	User.findOne({ username: req.body.username }).then((data) => {
+	User.findOne({ email: req.body.email }).then((data) => {
 		if (data === null) {
 			const hash = bcrypt.hashSync(req.body.password, 10)
 			const token = uid2(32)
-			const newUser = new User({
+
+			User.create({
 				username: req.body.username,
+				lastname: req.body.lastname,
+				email: req.body.email,
 				password: hash,
 				token: token,
-			})
-
-			newUser.save().then((data) => {
-				res.json({ result: true, user: data })
+			}).then((err, data) => {
+				if (data) {
+					res.json({
+						result: true,
+						user: {
+							token: data.token,
+							username: data.username,
+							id: data._id,
+						},
+					})
+				} else {
+					res.json({ result: false, err: err, error: "Can't save user" })
+				}
 			})
 		} else {
 			res.json({ result: false, error: "User already exists" })
@@ -35,34 +47,58 @@ router.post("/signup", (req, res) => {
 
 // POST /USER/SIGNIN
 // connection d'un utilisateur
-// champs : username + password
 router.post("/signin", (req, res) => {
-	if (!checkBody(req.body, ["username", "password"])) {
+	// champ requis "email", "password"
+	if (!checkBody(req.body, ["email", "password"])) {
 		res.json({ result: false, error: "Missing or empty fields" })
 		return
 	}
-
-	User.findOne({ username: req.body.username }).then((data) => {
+	// cherche un email en bdd
+	User.findOne({ email: req.body.email }).then((err, data) => {
 		if (data && bcrypt.compareSync(req.body.password, data.password)) {
-			res.json({ result: true, token: data })
+			res.json({
+				result: true,
+				user: { token: data.token, username: data.username, id: data._id },
+			})
 		} else {
-			res.json({ result: false, error: "User not found" })
+			res.json({ result: false, error: "User not found", err: err })
 		}
 	})
 })
 
-// UPDATE /USER/HELPERZ/:ID
-// router.update("/helperz/:token", (req, res) => {
-// 	User.updateOne(
-// 		{
-// 			token: req.params.token,
-// 		},
-// 		{
-// 			$set: {
-// 				...(req.body.username && { username: req.body.username }),
-// 			},
-// 		}
-// 	)
-// })
+// PUT /USER/:TOKEN
+// ajoute une annonce a un utilisateur
+router.put("/:id", (req, res) => {
+	User.updateOne(
+		{
+			_id: req.params.id,
+		},
+		{
+			$push: {
+				annonces: req.body.annonces,
+			},
+		}
+	).then((err, data) => {
+		if (data) {
+			res.json({ result: true })
+		} else {
+			res.json({ result: false, err: err })
+		}
+	})
+})
+
+// GET /USER/:ID
+// recupère toute les infos d'un user sauf password
+router.get("/:id", (req, res) => {
+	User.findOne({ _id: req.params.id }, { password: 0 })
+		.populate("announces")
+		.then((data) => {
+			if (data) {
+				res.json({ result: true, user: data })
+			} else {
+				res.json({ result: false, err: err })
+			}
+		})
+})
 
 module.exports = router
