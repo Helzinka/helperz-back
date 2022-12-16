@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const Announces = require("./announces")
 
 const latLong = mongoose.Schema({
 	lat: Number,
@@ -16,6 +17,7 @@ const userSchema = mongoose.Schema({
 	location: latLong,
 	skills: [String],
 	token: String,
+	annonces: [{ type: mongoose.Schema.Types.ObjectId, ref: Announces }],
 })
 
 const User = mongoose.model("users", userSchema)
