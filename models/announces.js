@@ -7,16 +7,19 @@ const Position = mongoose.Schema({
 	long: Number,
 })
 
-const announcesSchema = mongoose.Schema({
-	title: String,
-	url: String,
-	price: Number,
-	description: String,
-	location: Position,
-	tag: [String],
-	userOwner: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
-	comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "comments" }],
-})
+const announcesSchema = mongoose.Schema(
+	{
+		title: String,
+		url: String,
+		price: Number,
+		description: String,
+		location: Position,
+		tag: [String],
+		userOwner: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+		comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "comments" }],
+	},
+	{ versionKey: false }
+)
 
 const announces = mongoose.model("announces", announcesSchema)
 

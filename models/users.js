@@ -19,15 +19,20 @@ const Helperz = mongoose.Schema({
 // Model user
 // clef-etrangere vers collection "announces"
 // user a plusieurs annonces
-const userSchema = mongoose.Schema({
-	username: String,
-	lastname: String,
-	password: String,
-	email: String,
-	helperz: Helperz,
-	token: String,
-	announces: [{ type: mongoose.Schema.Types.ObjectId, ref: "announces" }],
-})
+const userSchema = mongoose.Schema(
+	{
+		username: String,
+		lastname: String,
+		password: String,
+		email: String,
+		helperz: Helperz,
+		token: String,
+		announces: [{ type: mongoose.Schema.Types.ObjectId, ref: "announces" }],
+	},
+	{
+		versionKey: false,
+	}
+)
 
 const User = mongoose.model("users", userSchema)
 

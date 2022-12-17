@@ -11,7 +11,7 @@ function addAnnouncesToUser(userId, announceId) {
 		},
 		{
 			$push: {
-				annonces: announceId,
+				announces: announceId,
 			},
 		}
 	).then((data) => {
@@ -20,6 +20,7 @@ function addAnnouncesToUser(userId, announceId) {
 }
 
 // POST ANNOUNCES/
+// creation annonces
 router.post("/", (req, res) => {
 	Announces.create({
 		title: req.body.title,
@@ -28,24 +29,32 @@ router.post("/", (req, res) => {
 		description: req.body.description,
 		userOwner: req.body.userOwner,
 		tag: req.body.tag,
+		"location.name": req.body.name,
+		"location.lat": req.body.lat,
+		"location.long": req.body.long,
 	}).then((data) => {
 		if (data) {
 			addAnnouncesToUser(data.userOwner, data._id)
-			res.json({ result: true })
+			res.json({ resutl: true, data: data })
 		} else {
 			res.json({ result: false, error: "Can't add announces" })
 		}
 	})
 })
 
-// POST ANNOUNCES/ par tag et lieu
-// retourne toute les announces avec le lieu et les tags
-router.post("/", (req, res) => {
-	Announces.find({
-		$and: [{ tag: { $in: req.body.tag } }, { "location.name": req.body.name }],
-	}).then((data) => {
-		res.json(data)
-	})
+// GET ANNOUNCES/ par tag et lieu
+// retourne toute les announces
+router.get("/", (req, res) => {
+	Announces.find()
+		.populate({
+			path: "comments",
+			populate: {
+				path: "userOwner",
+			},
+		})
+		.then((data) => {
+			res.json({ resutl: true, data: data })
+		})
 })
 
 // PUT ANNOUNCES/:ID
@@ -60,8 +69,16 @@ router.put("/:id", (req, res) => {
 		}
 	).then((data) => {
 		if (data) {
-			res.json({ result: true })
+			res.json({ result: true, data: data })
 		}
+	})
+})
+
+// DELETE ANNOUNCES/:ID
+// supprime une annonce
+router.delete("/:id", (req, res) => {
+	Announces.deleteOne({ _id: req.params.id }).then((data) => {
+		res.json({ resutl: true, data: data })
 	})
 })
 

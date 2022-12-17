@@ -12,6 +12,7 @@ const cors = require("cors")
 const indexRouter = require("./routes/index")
 const announcesRouter = require("./routes/announces")
 const usersRouter = require("./routes/users")
+const commentsRouter = require("./routes/comments")
 
 // initialisation de express
 const app = express()
@@ -25,7 +26,7 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, "public")))
 
 // chemins des routers principaux
-app.use("/", indexRouter)
+app.use("/comments", commentsRouter)
 app.use("/announces", announcesRouter)
 app.use("/users", usersRouter)
 
