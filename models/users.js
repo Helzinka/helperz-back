@@ -8,8 +8,8 @@ const Position = mongoose.Schema({
 })
 
 // sous-document helperz
-const Helper = mongoose.Schema({
-	isHelper: Boolean,
+const Helperz = mongoose.Schema({
+	isHelperz: Boolean,
 	available: Boolean,
 	skills: [String],
 	review: Number,
@@ -24,7 +24,7 @@ const userSchema = mongoose.Schema({
 	lastname: String,
 	password: String,
 	email: String,
-	helper: Helper,
+	helperz: Helperz,
 	token: String,
 	announces: [{ type: mongoose.Schema.Types.ObjectId, ref: "announces" }],
 })

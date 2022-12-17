@@ -25,7 +25,7 @@ router.post("/signup", (req, res) => {
 				email: req.body.email,
 				password: hash,
 				token: token,
-			}).then((err, data) => {
+			}).then((data) => {
 				if (data) {
 					res.json({
 						result: true,
@@ -36,7 +36,7 @@ router.post("/signup", (req, res) => {
 						},
 					})
 				} else {
-					res.json({ result: false, err: err, error: "Can't save user" })
+					res.json({ result: false, error: "Can't save user" })
 				}
 			})
 		} else {
@@ -54,35 +54,14 @@ router.post("/signin", (req, res) => {
 		return
 	}
 	// cherche un email en bdd
-	User.findOne({ email: req.body.email }).then((err, data) => {
+	User.findOne({ email: req.body.email }).then((data) => {
 		if (data && bcrypt.compareSync(req.body.password, data.password)) {
 			res.json({
 				result: true,
 				user: { token: data.token, username: data.username, id: data._id },
 			})
 		} else {
-			res.json({ result: false, error: "User not found", err: err })
-		}
-	})
-})
-
-// PUT /USER/:TOKEN
-// ajoute une annonce a un utilisateur
-router.put("/:id", (req, res) => {
-	User.updateOne(
-		{
-			_id: req.params.id,
-		},
-		{
-			$push: {
-				annonces: req.body.annonces,
-			},
-		}
-	).then((err, data) => {
-		if (data) {
-			res.json({ result: true })
-		} else {
-			res.json({ result: false, err: err })
+			res.json({ result: false, error: "User not found" })
 		}
 	})
 })
@@ -96,9 +75,26 @@ router.get("/:id", (req, res) => {
 			if (data) {
 				res.json({ result: true, user: data })
 			} else {
-				res.json({ result: false, err: err })
+				res.json({ result: false, error: "Can't get user" })
 			}
 		})
+})
+
+// PUT /USER/:ID
+// update le document avec les champs spécifiés
+router.put("/:id", (req, res) => {
+	User.updateOne(
+		{
+			_id: req.params.id,
+		},
+		{
+			$set: req.body,
+		}
+	).then((data) => {
+		if (data) {
+			res.json({ result: true })
+		}
+	})
 })
 
 module.exports = router
