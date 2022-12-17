@@ -32,7 +32,6 @@ router.post("/signup", (req, res) => {
 						user: {
 							token: data.token,
 							username: data.username,
-							id: data._id,
 						},
 					})
 				} else {
@@ -58,7 +57,7 @@ router.post("/signin", (req, res) => {
 		if (data && bcrypt.compareSync(req.body.password, data.password)) {
 			res.json({
 				result: true,
-				user: { token: data.token, username: data.username, id: data._id },
+				user: { token: data.token, username: data.username },
 			})
 		} else {
 			res.json({ result: false, error: "User not found" })
@@ -68,8 +67,8 @@ router.post("/signin", (req, res) => {
 
 // GET /USER/:ID
 // recupère toute les infos d'un user sauf password
-router.get("/:id", (req, res) => {
-	User.findOne({ _id: req.params.id }, { password: 0 })
+router.get("/:token", (req, res) => {
+	User.findOne({ token: req.params.token }, { password: 0 })
 		.populate("announces")
 		.then((data) => {
 			if (data) {
@@ -82,17 +81,17 @@ router.get("/:id", (req, res) => {
 
 // PUT /USER/:ID
 // update le document avec les champs spécifiés
-router.put("/:id", (req, res) => {
+router.put("/:token", (req, res) => {
 	User.updateOne(
 		{
-			_id: req.params.id,
+			token: req.params.token,
 		},
 		{
 			$set: req.body,
 		}
 	).then((data) => {
 		if (data) {
-			res.json({ result: true })
+			res.json({ result: true, user: data })
 		}
 	})
 })
