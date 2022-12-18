@@ -31,6 +31,7 @@ router.post("/signup", (req, res) => {
 						user: {
 							token: data.token,
 							username: data.username,
+							id: data._id,
 						},
 					})
 				} else {
@@ -56,7 +57,7 @@ router.post("/signin", (req, res) => {
 		if (data && bcrypt.compareSync(req.body.password, data.password)) {
 			res.json({
 				result: true,
-				user: { token: data.token, username: data.username },
+				user: { token: data.token, username: data.username, id: data._id },
 			})
 		} else {
 			res.json({ result: false, error: "User not found" })

@@ -4,7 +4,7 @@ const Announces = require("../models/announces")
 const User = require("../models/users")
 
 // ajoute une annonce a un user
-function addAnnouncesToUser(userId, announceId) {
+function addAnnounceToUser(userId, announceId) {
 	User.updateOne(
 		{
 			_id: userId,
@@ -34,7 +34,8 @@ router.post("/", (req, res) => {
 		"location.long": req.body.long,
 	}).then((data) => {
 		if (data) {
-			addAnnouncesToUser(data.userOwner, data._id)
+			console.log(data)
+			addAnnounceToUser(data.userOwner, data._id)
 			res.json({ resutl: true, data: data })
 		} else {
 			res.json({ result: false, error: "Can't add announces" })
