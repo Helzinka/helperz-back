@@ -34,7 +34,6 @@ router.post("/", (req, res) => {
 		"location.long": req.body.long,
 	}).then((data) => {
 		if (data) {
-			console.log(data)
 			addAnnounceToUser(data.userOwner, data._id)
 			res.json({ resutl: true, data: data })
 		} else {

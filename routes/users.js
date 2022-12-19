@@ -72,7 +72,7 @@ router.get("/announces/:token", (req, res) => {
 		.populate("announces")
 		.then((data) => {
 			if (data) {
-				res.json({ result: true, user: data })
+				res.json({ result: true, announces: data.announces })
 			} else {
 				res.json({ result: false, error: "Can't get user" })
 			}
