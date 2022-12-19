@@ -67,7 +67,7 @@ router.post("/signin", (req, res) => {
 
 // GET /USER/:ID
 // recupère toute les infos d'un user sauf password
-router.get("/:token", (req, res) => {
+router.get("/announces/:token", (req, res) => {
 	User.findOne({ token: req.params.token }, { password: 0 })
 		.populate("announces")
 		.then((data) => {
@@ -77,6 +77,16 @@ router.get("/:token", (req, res) => {
 				res.json({ result: false, error: "Can't get user" })
 			}
 		})
+})
+
+router.get("/helperz/:location", (req, res) => {
+	User.find({ "helperz.location.name": req.params.location }, { password: 0 }).then((data) => {
+		if (data) {
+			res.json({ result: true, user: data })
+		} else {
+			res.json({ result: false, error: "Can't get user" })
+		}
+	})
 })
 
 // PUT /USER/:ID
