@@ -79,6 +79,8 @@ router.get("/announces/:token", (req, res) => {
 		})
 })
 
+// GET /USER/HELPERZ/:LOCATION
+// recupère toute les infos d'un user sauf password
 router.get("/helperz/:location", (req, res) => {
 	User.find({ "helperz.location.name": req.params.location }, { password: 0 }).then((data) => {
 		if (data) {
