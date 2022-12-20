@@ -53,7 +53,7 @@ router.get("/", (req, res) => {
 			},
 		})
 		.then((data) => {
-			res.json({ resutl: true, data: data })
+			res.json({ result: true, data: data })
 		})
 })
 
@@ -78,7 +78,7 @@ router.put("/:id", (req, res) => {
 // supprime une annonce
 router.delete("/:id", (req, res) => {
 	Announces.deleteOne({ _id: req.params.id }).then((data) => {
-		res.json({ resutl: true, data: data })
+		res.json({ result: true, data: data })
 	})
 })
 
