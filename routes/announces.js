@@ -35,7 +35,7 @@ router.post("/", (req, res) => {
 	}).then((data) => {
 		if (data) {
 			addAnnounceToUser(data.userOwner, data._id)
-			res.json({ result: true, data: data })
+			res.json({ result: true, announces: data })
 		} else {
 			res.json({ result: false, error: "Can't add announces" })
 		}
